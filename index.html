@@ -45,3 +45,627 @@
 
         .loader {
             border: 3px solid #1e293b;
+            border-radius: 50%;
+            border-top: 3px solid #fbbf24;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Mode Switcher */
+        .mode-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        .mode-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #fbbf24; }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        .markdown-body h3 { color: #fbbf24; margin-top: 1em; margin-bottom: 0.5em; font-size: 1.1em; border-bottom: 1px solid rgba(251, 191, 36, 0.2); padding-bottom: 0.2em; }
+        .markdown-body strong { color: #fff; }
+        .markdown-body ul { list-style: disc; padding-left: 1.5em; color: #cbd5e1; }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay -->
+    <div class="ui-layer flex flex-col justify-between p-4 md:p-6">
+        
+        <!-- Header & Tools -->
+        <header class="pointer-auto flex flex-col md:flex-row justify-between items-start gap-4">
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-yellow-500">
+                <h1 class="text-3xl font-bold tracking-widest golden-text mb-1"><i class="fas fa-eye"></i> 萧湘奇门面相</h1>
+                <p class="text-xs text-gray-400">基于《萧湘相法》与《浩瀚奇门神断》</p>
+                
+                <div class="mt-4 flex items-center gap-4 text-sm">
+                    <div class="flex items-center gap-2" title="切换查看模式">
+                        <span class="text-gray-300">十二宫详解</span>
+                        <label class="mode-switch">
+                            <input type="checkbox" id="viewMode" onchange="toggleViewMode()">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="text-yellow-500 font-bold">奇门流年断</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Button -->
+            <button onclick="openAIModal()" class="pointer-auto bg-gradient-to-br from-yellow-600 to-yellow-800 text-white px-6 py-4 rounded-xl shadow-2xl hover:scale-105 transition transform flex items-center gap-3 border border-yellow-400">
+                <i class="fas fa-camera text-2xl"></i>
+                <div class="text-left">
+                    <div class="font-bold text-sm">AI 大师看相</div>
+                    <div class="text-[10px] opacity-80">拍照/上传 自动解析</div>
+                </div>
+            </button>
+        </header>
+
+        <!-- Dynamic Info Panel -->
+        <div id="info-panel" class="pointer-auto absolute right-0 top-0 h-full w-full md:w-96 glass-panel info-card z-20 flex flex-col border-l border-yellow-500/30">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-900/50">
+                <h3 class="text-xl font-bold golden-text flex items-center gap-2">
+                    <i class="fas fa-book-open"></i> <span id="info-title">相理解析</span>
+                </h3>
+                <button onclick="closeInfo()" class="text-gray-400 hover:text-white transition"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-5 space-y-4">
+                <div id="info-content" class="text-sm leading-relaxed text-gray-300">
+                    请点击面部模型上的区域进行查看。
+                </div>
+                
+                <!-- Qi Men Special Section (Hidden by default) -->
+                <div id="qimen-section" class="hidden mt-4 pt-4 border-t border-gray-700">
+                    <h4 class="text-yellow-500 font-bold mb-2"><i class="fas fa-bolt"></i> 浩瀚奇门神断</h4>
+                    <div id="qimen-content" class="bg-red-900/30 p-3 rounded border border-red-500/30 text-xs text-red-100">
+                        <!-- Dynamic Content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend (Bottom Left) -->
+        <div class="pointer-auto self-start mt-auto glass-panel p-3 rounded-lg text-xs text-gray-400 max-w-[200px]">
+            <div id="legend-normal">
+                <div class="font-bold text-yellow-500 mb-1">十二宫模式：</div>
+                <p>点击面部区域（如额头、鼻子）查看《萧湘相法》及《麻衣神相》定义的吉凶标准。</p>
+            </div>
+            <div id="legend-qimen" class="hidden">
+                <div class="font-bold text-red-400 mb-1">奇门流年模式：</div>
+                <p>假设点击处有<span class="text-white">痣/疤/痘</span>，根据《浩瀚神断》推算具体的流年流月吉凶。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Modal -->
+    <div id="ai-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4 backdrop-blur-sm">
+        <div class="bg-slate-900 rounded-xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-yellow-600/50 relative">
+            <button onclick="closeAIModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10"><i class="fas fa-times text-2xl"></i></button>
+            
+            <div class="p-6 border-b border-gray-700 bg-gradient-to-r from-slate-900 to-slate-800">
+                <h2 class="text-2xl font-bold golden-text"><i class="fas fa-magic mr-2"></i>AI 玄学大师看相</h2>
+                <p class="text-xs text-gray-400 mt-1">融合萧湘相法、麻衣神相与浩瀚奇门</p>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 space-y-6">
+                <!-- Inputs -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">性别 (Gender)</label>
+                        <select id="gender-select" class="w-full bg-slate-800 border-gray-600 text-white rounded p-2 text-sm focus:border-yellow-500 outline-none">
+                            <option value="男">男 (阳)</option>
+                            <option value="女">女 (阴)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 mb-1">虚岁 (Age)</label>
+                        <input type="number" id="age-input" placeholder="例如: 28" class="w-full bg-slate-800 border-gray-600 text-white rounded p-2 text-sm focus:border-yellow-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Camera/Preview Area -->
+                <div class="relative bg-black rounded-lg aspect-[4/3] flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-700 hover:border-yellow-500 transition group">
+                    <video id="video" class="absolute inset-0 w-full h-full object-cover hidden" autoplay playsinline></video>
+                    <img id="preview-image" class="absolute inset-0 w-full h-full object-contain hidden" />
+                    <div id="camera-placeholder" class="text-gray-500 flex flex-col items-center group-hover:text-yellow-500 transition">
+                        <i class="fas fa-cloud-upload-alt text-5xl mb-3"></i>
+                        <span class="text-sm">点击下方开启相机或上传</span>
+                    </div>
+                    <canvas id="capture-canvas" class="hidden"></canvas>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-4">
+                    <button onclick="startCamera()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-lg font-medium transition">
+                        <i class="fas fa-video mr-2"></i>打开相机
+                    </button>
+                    <label class="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-lg font-medium transition text-center cursor-pointer">
+                        <i class="fas fa-image mr-2"></i>上传照片
+                        <input type="file" accept="image/*" onchange="handleFileUpload(event)" class="hidden">
+                    </label>
+                </div>
+
+                <!-- Analyze Button -->
+                <button id="analyze-btn" onclick="analyzeFace()" class="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 text-white py-4 rounded-lg font-bold shadow-lg hover:from-yellow-500 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed hidden transition text-lg">
+                    <i class="fas fa-search-plus mr-2"></i> 开始神断
+                </button>
+
+                <!-- Loading & Result -->
+                <div id="loading-indicator" class="hidden flex flex-col items-center py-8 text-yellow-500">
+                    <div class="loader mb-3"></div>
+                    <span class="animate-pulse">大师正在观骨察神...</span>
+                </div>
+
+                <div id="analysis-result" class="hidden bg-slate-800 p-6 rounded-lg border border-slate-700 text-sm leading-relaxed text-gray-200 markdown-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 3D Scene Setup ---
+        let scene, camera, renderer, controls, faceGroup;
+        let raycaster, mouse;
+        const zones = [];
+        let isQiMenMode = false;
+
+        // Data from books (Xiao Xiang / Ma Yi)
+        const faceZonesData = {
+            "LifePalace": { 
+                title: "命宫 (印堂)", 
+                desc: "位于两眉之间。主一生荣枯。宽阔平满如镜者，虽暂困顿终必大发；狭窄凹陷或有悬针纹者，心胸不开，多忧劳。气色黄明吉，黑气主灾。",
+                qimen: "此处若有恶痣或疤痕，对应《浩瀚神断》：身体必差，28岁前后运势受阻。流年应在午年（马年）或农历五月不顺。"
+            },
+            "WealthPalace": { 
+                title: "财帛宫 (鼻准)", 
+                desc: "鼻头为财星。准头丰隆圆大，兰台廷尉(鼻翼)分明有收，主富。鼻孔仰露主漏财。鼻梁起节主中年败业。",
+                qimen: "此处若有伤痕结节或黑痣，直断：41-45岁财源不聚，夫妻口角。流年应在土旺之年或辰戌丑未月。"
+            },
+            "CareerPalace": { 
+                title: "官禄宫 (额中)", 
+                desc: "位于天庭正中。饱满高广，无纹侵痣破，主早年得志，仕途顺畅。低陷者无官运，宜技艺发展。",
+                qimen: "此处有痣或疤，主工作难升迁，常犯小人。流年应在离宫（午火），即马年或夏季易有官非口舌。"
+            },
+            "MarriagePalace": { 
+                title: "妻妾宫 (奸门)", 
+                desc: "眼尾太阳穴处。丰满光润，夫妻和睦。凹陷纹多，主克配偶或多婚。有黑子者，主淫欲或外遇。",
+                qimen: "左奸门有痣克妻，右奸门有痣婚姻不美（男）。流年应在卯/酉之年（兔/鸡），防感情破裂。"
+            },
+            "ParentsPalace": { 
+                title: "父母宫 (日角/月角)", 
+                desc: "额头左右两上方。高圆明净，父母长寿康宁。低陷或黯淡，主刑克父母或早年失怙。",
+                qimen: "左额有瑕疵损父，右额有瑕疵损母。流年应在巳/午年（火烧乾金）或父母生肖之年。"
+            },
+            "TravelPalace": { 
+                title: "迁移宫 (天仓/驿马)", 
+                desc: "眉尾上方发际处。丰隆者宜远行发展，出国运佳。塌陷者只宜安守故土，外出多灾。",
+                qimen: "此处气色暗滞或有痣，主外出车祸或破财。流年应在寅/申/巳/亥（四马地）之年。"
+            },
+            "HealthPalace": { 
+                title: "疾厄宫 (山根/年寿)", 
+                desc: "两眼之间鼻梁处。隆起丰满，身体强健。低陷纹破，主多病灾。有横纹者主有大手术或险厄。",
+                qimen: "山根低陷或有横纹，主41岁有大难。流年应在丑/寅年，注意肠胃或脊椎病变。"
+            },
+            "ChildrenPalace": { 
+                title: "男女宫 (泪堂)", 
+                desc: "眼下卧蚕处。丰厚明润，子孙繁衍孝顺。干枯深陷或有罗网纹，主无子或子女忤逆。",
+                qimen: "此处有黑痣，主为子女操劳，或生殖系统有疾。流年应在坎宫（子水），即鼠年或冬季。"
+            },
+            "FieldPalace": { 
+                title: "田宅宫 (上眼睑)", 
+                desc: "眉眼之间。宽广丰满，主置产丰富，家运安宁。狭窄逼仄，主无恒产，性急躁。",
+                qimen: "此处有痣，主家宅不安，防火灾烫伤。流年应在土年（辰戌丑未）。"
+            },
+            "FriendsPalace": { 
+                title: "交友宫 (奴仆/下巴)", 
+                desc: "下巴两腮处。圆润丰满，部属得力，晚运佳。尖削无肉，晚景凄凉，易被朋友背叛。",
+                qimen: "此处有疤痕或恶痣，易遭下属背叛或因朋友破财。流年应在晚年或水年。"
+            },
+            "BrothersPalace": { 
+                title: "兄弟宫 (眉毛)", 
+                desc: "眉长过目，兄弟和睦。眉断或逆生，兄弟反目。眉毛浓密，重情义；眉淡，情缘薄。",
+                qimen: "眉中有痣（草里藏珠）主聪明但水厄。眉尾散乱，33/34岁防破财。"
+            },
+            "LuckPalace": { 
+                title: "福德宫 (眉上)", 
+                desc: "眉上方偏外侧。丰满者福气厚，祖荫好，财运顺。尖削者劳碌一生，福薄。",
+                qimen: "此处塌陷，主财来财去一场空。流年应在30岁左右运势转折点。"
+            }
+        };
+
+        function init3D() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f172a); // Dark Slate Blue
+            
+            // Fog for depth
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.03);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 15);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+            scene.add(ambientLight);
+
+            const keyLight = new THREE.DirectionalLight(0xffeebb, 1);
+            keyLight.position.set(5, 5, 10);
+            keyLight.castShadow = true;
+            scene.add(keyLight);
+
+            const rimLight = new THREE.SpotLight(0x445599, 5);
+            rimLight.position.set(-5, 5, -5);
+            scene.add(rimLight);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 8;
+            controls.maxDistance = 20;
+            controls.enablePan = false;
+
+            // Generate Face
+            createFaceModel();
+
+            // Interactions
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('click', onMouseClick);
+            
+            animate();
+        }
+
+        function createFaceModel() {
+            faceGroup = new THREE.Group();
+
+            // Base Head (Capsule-like)
+            const headGeo = new THREE.SphereGeometry(4, 64, 64);
+            headGeo.scale(0.85, 1.1, 0.9); // Elongate for face shape
+            const skinMat = new THREE.MeshStandardMaterial({ 
+                color: 0xf5d0b0, // Skin tone
+                roughness: 0.4,
+                metalness: 0.1
+            });
+            const head = new THREE.Mesh(headGeo, skinMat);
+            faceGroup.add(head);
+
+            // Create Interactive Zones (Invisible Mesh Overlays)
+            // Using BoxGeometry or CylinderGeometry positioned on surface
+            
+            // 1. Life Palace (Indrag/Forehead Center)
+            createZone("LifePalace", 0, 1.5, 3.4, 1.2, 0.8, 0xff0000);
+            
+            // 2. Career Palace (Upper Forehead)
+            createZone("CareerPalace", 0, 3.0, 3.0, 2.0, 1.2, 0x00ff00);
+            
+            // 3. Parents Palace (Forehead Sides - Sun/Moon Horns)
+            createZone("ParentsPalace", -1.5, 3.2, 2.5, 1.0, 1.0, 0xffff00); // Right (User Left)
+            createZone("ParentsPalace", 1.5, 3.2, 2.5, 1.0, 1.0, 0xffff00);  // Left
+            
+            // 4. Travel Palace (Temples)
+            createZone("TravelPalace", -2.8, 2.5, 1.5, 1.0, 1.5, 0x00ffff);
+            createZone("TravelPalace", 2.8, 2.5, 1.5, 1.0, 1.5, 0x00ffff);
+
+            // 5. Brothers Palace (Eyebrows)
+            createZone("BrothersPalace", -1.5, 1.6, 3.3, 1.8, 0.4, 0x8b4513);
+            createZone("BrothersPalace", 1.5, 1.6, 3.3, 1.8, 0.4, 0x8b4513);
+
+            // 6. Field Palace (Eyelids)
+            createZone("FieldPalace", -1.5, 1.0, 3.2, 1.5, 0.5, 0x800080);
+            createZone("FieldPalace", 1.5, 1.0, 3.2, 1.5, 0.5, 0x800080);
+
+            // 7. Children Palace (Under Eyes)
+            createZone("ChildrenPalace", -1.5, 0.3, 3.2, 1.5, 0.5, 0xffc0cb);
+            createZone("ChildrenPalace", 1.5, 0.3, 3.2, 1.5, 0.5, 0xffc0cb);
+
+            // 8. Marriage Palace (Eye corners/Temples)
+            createZone("MarriagePalace", -3.0, 0.8, 2.0, 0.8, 1.0, 0xff1493);
+            createZone("MarriagePalace", 3.0, 0.8, 2.0, 0.8, 1.0, 0xff1493);
+
+            // 9. Health Palace (Nose Bridge)
+            createZone("HealthPalace", 0, 0.5, 3.6, 0.6, 1.2, 0xa52a2a);
+
+            // 10. Wealth Palace (Nose Tip)
+            createZone("WealthPalace", 0, -0.8, 3.7, 1.0, 0.8, 0xd4af37);
+
+            // 11. Friends Palace (Chin/Jaw)
+            createZone("FriendsPalace", 0, -3.5, 3.0, 2.5, 1.2, 0x708090);
+            
+            // 12. Luck Palace (Above eyebrows outer)
+            createZone("LuckPalace", -2.2, 2.2, 2.8, 1.0, 0.8, 0xff8c00);
+            createZone("LuckPalace", 2.2, 2.2, 2.8, 1.0, 0.8, 0xff8c00);
+
+            // Add simple visual features (Eyes, Nose shape) just for orientation
+            // Nose
+            const noseGeo = new THREE.ConeGeometry(0.5, 2, 32);
+            const nose = new THREE.Mesh(noseGeo, skinMat);
+            nose.position.set(0, -0.2, 3.5);
+            nose.rotation.x = -0.2;
+            faceGroup.add(nose);
+
+            scene.add(faceGroup);
+        }
+
+        function createZone(id, x, y, z, w, h, color) {
+            const geo = new THREE.BoxGeometry(w, h, 0.5);
+            const mat = new THREE.MeshBasicMaterial({ 
+                color: color, 
+                transparent: true, 
+                opacity: 0.0,
+                wireframe: false
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(x, y, z);
+            mesh.userData = { id: id };
+            mesh.lookAt(0, 0, 10); // Face forward roughly
+            faceGroup.add(mesh);
+            zones.push(mesh);
+        }
+
+        function toggleViewMode() {
+            const checkbox = document.getElementById('viewMode');
+            isQiMenMode = checkbox.checked;
+            
+            const normalLegend = document.getElementById('legend-normal');
+            const qimenLegend = document.getElementById('legend-qimen');
+            
+            if (isQiMenMode) {
+                normalLegend.classList.add('hidden');
+                qimenLegend.classList.remove('hidden');
+            } else {
+                normalLegend.classList.remove('hidden');
+                qimenLegend.classList.add('hidden');
+            }
+            // Reset active card
+            closeInfo();
+        }
+
+        function onMouseClick(event) {
+            // Check if clicking UI
+            if (event.target.closest && event.target.closest('.pointer-auto')) return;
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(zones);
+
+            if (intersects.length > 0) {
+                const zone = intersects[0].object;
+                const data = faceZonesData[zone.userData.id];
+                showInfo(data);
+                
+                // Visual feedback
+                zones.forEach(function(z) { z.material.opacity = 0; });
+                zone.material.opacity = 0.3;
+                setTimeout(function() { zone.material.opacity = 0; }, 500);
+            }
+        }
+
+        function showInfo(data) {
+            const panel = document.getElementById('info-panel');
+            const title = document.getElementById('info-title');
+            const content = document.getElementById('info-content');
+            const qimenSection = document.getElementById('qimen-section');
+            const qimenContent = document.getElementById('qimen-content');
+
+            title.innerText = data.title;
+            content.innerText = data.desc;
+
+            if (isQiMenMode) {
+                qimenSection.classList.remove('hidden');
+                qimenContent.innerHTML = data.qimen;
+            } else {
+                qimenSection.classList.add('hidden');
+            }
+
+            panel.classList.add('active');
+        }
+
+        function closeInfo() {
+            document.getElementById('info-panel').classList.remove('active');
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            // Gentle idle animation
+            if (faceGroup) {
+                faceGroup.rotation.y = Math.sin(Date.now() * 0.0005) * 0.05;
+            }
+            renderer.render(scene, camera);
+        }
+
+        // --- AI Functionality ---
+        const apiKey = ""; // API Key injected by environment
+        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=" + apiKey;
+        let stream = null;
+        let imageBase64 = null;
+
+        function openAIModal() {
+            document.getElementById('ai-modal').classList.remove('hidden');
+            startCamera();
+        }
+
+        function closeAIModal() {
+            document.getElementById('ai-modal').classList.add('hidden');
+            if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+        }
+
+        async function startCamera() {
+            const video = document.getElementById('video');
+            const placeholder = document.getElementById('camera-placeholder');
+            const preview = document.getElementById('preview-image');
+            
+            try {
+                if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }});
+                video.srcObject = stream;
+                video.classList.remove('hidden');
+                preview.classList.add('hidden');
+                placeholder.classList.add('hidden');
+                document.getElementById('analyze-btn').classList.remove('hidden');
+                document.getElementById('analyze-btn').innerHTML = '<i class="fas fa-camera mr-2"></i> 拍摄并分析';
+            } catch(e) {
+                console.error(e);
+                alert("无法访问摄像头");
+            }
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+                const preview = document.getElementById('preview-image');
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                document.getElementById('video').classList.add('hidden');
+                document.getElementById('camera-placeholder').classList.add('hidden');
+                imageBase64 = e.target.result.split(',')[1];
+                
+                const btn = document.getElementById('analyze-btn');
+                btn.classList.remove('hidden');
+                btn.innerHTML = '<i class="fas fa-search-plus mr-2"></i> 开始神断';
+                btn.onclick = analyzeFace;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ✅ 这里是已经改好的、兼容手机浏览器的新版本 analyzeFace（没有 ?. 可选链）
+        async function analyzeFace() {
+            // 如果还在用视频，就先截一帧
+            const video = document.getElementById('video');
+            if (!video.classList.contains('hidden')) {
+                const canvas = document.getElementById('capture-canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0);
+                imageBase64 = canvas.toDataURL('image/jpeg').split(',')[1];
+
+                const preview = document.getElementById('preview-image');
+                const dataUrl = canvas.toDataURL('image/jpeg');
+                preview.src = dataUrl;
+                preview.classList.remove('hidden');
+                video.classList.add('hidden');
+                if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+            }
+
+            if (!imageBase64) return;
+
+            const loading = document.getElementById('loading-indicator');
+            const resultDiv = document.getElementById('analysis-result');
+            const btn = document.getElementById('analyze-btn');
+            
+            loading.classList.remove('hidden');
+            resultDiv.classList.add('hidden');
+            btn.disabled = true;
+
+            const gender = document.getElementById('gender-select').value;
+            const age = document.getElementById('age-input').value || "未知";
+
+            var prompt = "你是一位精通《萧湘识人相法全集》和《浩瀚奇门手面相神断》的玄学大师。\n" +
+                "用户性别：" + gender + "，虚岁：" + age + "。\n\n" +
+                "请分析这张面相照片，按照以下逻辑生成 Markdown 报告：\n\n" +
+                "1. **五行格局 (萧湘法)**：\n" +
+                "   - 观察脸型（金方、木长、水圆、火尖、土厚）。\n" +
+                "   - 判断是\"正局\"还是\"兼局\"（如木形兼火）。\n\n" +
+                "2. **三停与十二宫 (麻衣神相)**：\n" +
+                "   - 分析上中下三停比例。\n" +
+                "   - 重点点评：命宫（印堂）、财帛宫（鼻）、妻妾宫（奸门）、疾厄宫（山根）。\n\n" +
+                "3. **浩瀚奇门神断 (流年)**：\n" +
+                "   - 观察脸上是否有明显的痣、疤、痘、纹。\n" +
+                "   - **关键**：利用《浩瀚奇门》的九宫定位法，尝试推断流年吉凶。例如：左额有痣对应巳年或4月不顺；下巴有痘对应坎宫子年不顺。\n" +
+                "   - 结合用户年龄 " + age + " 岁，指出当前流年部位的好坏。\n\n" +
+                "4. **大师结语**：\n" +
+                "   - 综合评判富贵层次（小富、中贵等）。\n" +
+                "   - 给出一条改运建议（基于\"相随心转\"）。\n\n" +
+                "语气要求：专业、神秘、但富有哲理，使用相学术语（如\"山根折断\"、\"准头丰隆\"）。";
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            role: "user",
+                            parts: [
+                                { text: prompt },
+                                { inlineData: { mimeType: "image/jpeg", data: imageBase64 } }
+                            ]
+                        }]
+                    })
+                });
+                
+                const data = await response.json();
+
+                // 不使用 ?.，兼容旧浏览器
+                var text = "无法识别面相，请调整光线重试。";
+                if (data && data.candidates && data.candidates.length > 0 &&
+                    data.candidates[0].content &&
+                    data.candidates[0].content.parts &&
+                    data.candidates[0].content.parts.length > 0 &&
+                    data.candidates[0].content.parts[0].text) {
+                    text = data.candidates[0].content.parts[0].text;
+                }
+                
+                // Simple formatting
+                resultDiv.innerHTML = text
+                    .replace(/^# (.*$)/gim, '<h2 class="text-xl font-bold text-yellow-500 mb-2">$1</h2>')
+                    .replace(/^## (.*$)/gim, '<h3 class="text-lg font-bold text-yellow-400 mt-4">$1</h3>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')
+                    .replace(/\n/g, '<br>');
+                    
+                resultDiv.classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                resultDiv.innerHTML = "<span class='text-red-400'>天机晦涩，网络连接失败，请稍后再试。</span>";
+                resultDiv.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+                btn.disabled = false;
+            }
+        }
+
+        // Init
+        init3D();
+    </script>
+</body>
+</html>
