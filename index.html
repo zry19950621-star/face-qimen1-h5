@@ -17,7 +17,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* -------- 基础字体（用系统字体，避免 Google Fonts） -------- */
+        /* -------- 基础字体 -------- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, system-ui,
                          "PingFang SC", "Hiragino Sans GB", "STHeiti",
@@ -105,7 +105,7 @@
     <!-- 开屏背景（动态） -->
     <div class="absolute inset-0 z-0 pointer-events-none">
         <div class="w-full h-full relative overflow-hidden">
-            <!-- ⚠️ 新调色背景图 opening-bg.jpg -->
+            <!-- 开屏背景图 -->
             <img src="opening-bg.jpg"
                  alt=""
                  class="w-full h-full object-cover opacity-80 bg-hero-animate"
@@ -118,7 +118,7 @@
     <!-- 内容容器 -->
     <div id="content" class="relative z-10 w-full flex-1 flex flex-col safe-top safe-bottom"></div>
 
-    <!-- 微信顶部提示（github.io 被拦时只能提示） -->
+    <!-- 微信顶部提示 -->
     <div id="wx-tip"
          class="hidden fixed top-0 left-0 right-0 z-30 bg-black/80 text-white text-[11px] px-4 py-2 text-center">
         在微信中浏览时，推荐点击右上角 “···” 使用浏览器打开，体验更流畅 🍑
@@ -178,14 +178,15 @@ const questions = [
     }
 ];
 
-/* ---------------- 结果配置（修复语法） ---------------- */
+/* ---------------- 结果配置（已修语法） ---------------- */
 const results = {
     peach: {
         img: "桃子.jpg",
-        name: "桃子人格" "画作《桃醉》",
+        name: "桃子人格",
+        artwork: "画作《桃醉》",
         icon: "🍑",
         title: "被看见的艺术家",
-        keywords: ["柔软", "外向", "微孤独"],
+        keywords: ["柔软","外向","微孤独"],
         quote: "“我准备好了被看见。”",
         desc: "甜美又有点危险，社交高手、灵魂孤独。你读懂别人，也偶尔读不懂自己，在被围观和被理解之间来回摇摆。",
         matchName: "柠檬人格",
@@ -193,10 +194,11 @@ const results = {
     },
     lemon: {
         img: "柠檬.jpg",
-        name: "柠檬人格""画作《Lemon的救赎》",
+        name: "柠檬人格",
+        artwork: "画作《Lemon的救赎》",
         icon: "🍋",
         title: "酸涩的殉道者",
-        keywords: ["清醒", "疗愈", "微光"],
+        keywords: ["清醒","疗愈","微光"],
         quote: "“黑夜越深，酸楚越亮。”",
         desc: "你是刀锋下的温柔治愈者。看得很清楚，也感受得很深。你懂所有人的难，却很少承认自己的累。",
         matchName: "桃子人格",
@@ -204,10 +206,11 @@ const results = {
     },
     cherry: {
         img: "樱桃.jpg",
-        name: "车厘子人格","画作《车厘子初见》",
+        name: "车厘子人格",
+        artwork: "画作《车厘子初见》",
         icon: "🍒",
         title: "精致的幻梦娃娃",
-        keywords: ["完美主义", "被凝视", "身份焦虑"],
+        keywords: ["完美主义","被凝视","身份焦虑"],
         quote: "“我闪耀，也易碎。”",
         desc: "你天生带着镜头感，走到哪里都是焦点。但越被看见，就越怕暴露脆弱。你在闪耀与自我怀疑中反复切换。",
         matchName: "杨桃人格",
@@ -215,10 +218,11 @@ const results = {
     },
     pineapple: {
         img: "菠萝.jpg",
-        name: "菠萝人格","画作《大夏菠萝》",
+        name: "菠萝人格",
+        artwork: "画作《大夏菠萝》",
         icon: "🍍",
         title: "刀锋上的温柔贵族",
-        keywords: ["野心", "自律", "隐忍"],
+        keywords: ["野心","自律","隐忍"],
         quote: "“我笑着被切开，因为我有金色的心。”",
         desc: "你强大、清醒、目标明确。别人看到的是你的刺，却忽略你内里的香和甜。",
         matchName: "西瓜人格",
@@ -226,10 +230,11 @@ const results = {
     },
     kiwi: {
         img: "kiwi.jpg",
-        name: "奇异果人格", "画作《奇异果里的埃德利扎岛》",
+        name: "奇异果人格",
+        artwork: "画作《奇异果里的埃德利扎岛》",
         icon: "🥝",
         title: "孤岛天才",
-        keywords: ["独立", "内敛", "灵感"],
+        keywords: ["独立","内敛","灵感"],
         quote: "“怪，也是一种天赋。”",
         desc: "你是有点毛躁、又很通透的艺术怪胎。世界不一定懂你，但灵感永远站在你这边。",
         matchName: "火龙果人格",
@@ -237,10 +242,11 @@ const results = {
     },
     guava: {
         img: "番石榴.jpg",
-        name: "芭乐人格","画作《芭乐就是快乐的乐》",
+        name: "芭乐人格",
+        artwork: "画作《芭乐就是快乐的乐》",
         icon: "🥭",
         title: "野蛮女王",
-        keywords: ["热烈", "草根", "反叛"],
+        keywords: ["热烈","草根","反叛"],
         quote: "“我不完美，但我真实。”",
         desc: "你从不伪装，情绪来就来，走就走。你是人群里最吵闹的一颗心，也是最真诚的一颗心。",
         matchName: "石榴人格",
@@ -248,10 +254,11 @@ const results = {
     },
     pomegranate: {
         img: "石榴.jpg",
-        name: "石榴人格""画作《石榴裙下》",
+        name: "石榴人格",
+        artwork: "画作《石榴裙下》",
         icon: "🍅",
         title: "被赞美的牺牲者",
-        keywords: ["母性", "承受", "重生"],
+        keywords: ["母性","承受","重生"],
         quote: "“我爱所有人，也想被自己爱。”",
         desc: "你总是先照顾别人，再想起自己。你擅长付出，也在学着拒绝。你的温柔不是天生的讨好，而是被磨出来的力量。",
         matchName: "芭乐人格",
@@ -259,10 +266,11 @@ const results = {
     },
     sugarcane: {
         img: "甘蔗.jpg",
-        name: "甘蔗人格""画作《甘蔗微甜》",
+        name: "甘蔗人格",
+        artwork: "画作《甘蔗微甜》",
         icon: "🧃",
         title: "甜的奉献者",
-        keywords: ["温顺", "隐忍", "苏醒"],
+        keywords: ["温顺","隐忍","苏醒"],
         quote: "“这次，我为自己甜。”",
         desc: "你习惯把好东西留给别人，把压力留给自己。直到有一天，你终于意识到：你的甜，也可以只为自己保留。",
         matchName: "菠萝人格",
@@ -270,10 +278,11 @@ const results = {
     },
     watermelon: {
         img: "西瓜.jpg",
-        name: "西瓜人格""画作《瓜保甜星球心脏保熟》",
+        name: "西瓜人格",
+        artwork: "画作《瓜保甜星球心脏保熟》",
         icon: "🍉",
         title: "宇宙浪漫家",
-        keywords: ["流动", "欢乐", "宽容"],
+        keywords: ["流动","欢乐","宽容"],
         quote: "“我不怕虚无，因为我自带引力。”",
         desc: "你自由、松弛、对世界保持好奇心。你不强求别人留下，但愿意为喜欢的人一直亮着。",
         matchName: "菠萝人格",
@@ -281,10 +290,11 @@ const results = {
     },
     dragonfruit: {
         img: "火龙果.jpg",
-        name: "火龙果人格""画作《白芯火龙果的致命一击》",
+        name: "火龙果人格",
+        artwork: "画作《白芯火龙果的致命一击》",
         icon: "🐉",
         title: "艳丽的幸存者",
-        keywords: ["艺术", "情绪", "真心"],
+        keywords: ["艺术","情绪","真心"],
         quote: "“我亮过，也痛过。”",
         desc: "你像一场永远不会重演的现场演出。外表鲜艳、语气轻松，心里却藏着很多没人知道的黑洞。",
         matchName: "奇异果人格",
@@ -292,10 +302,11 @@ const results = {
     },
     orange: {
         img: "orange.jpg",
-        name: "橙子人格""画作《橙交》",
+        name: "橙子人格",
+        artwork: "画作《橙交》",
         icon: "🍊",
         title: "元气乐天派",
-        keywords: ["阳光", "掩饰", "活力"],
+        keywords: ["阳光","掩饰","活力"],
         quote: "“我的快乐，是你的光。”",
         desc: "你是所有人心里的小太阳。你习惯用笑和段子挡住黑暗，但真正理解你的人并不多。",
         matchName: "西瓜人格",
@@ -303,10 +314,11 @@ const results = {
     },
     starfruit: {
         img: "星果.jpg",
-        name: "杨桃人格""画作《杨桃也许是我的自画像吧》",
+        name: "杨桃人格",
+        artwork: "画作《杨桃也许是我的自画像吧》",
         icon: "⭐",
         title: "孤独的理想家",
-        keywords: ["棱角", "独特", "洞察"],
+        keywords: ["棱角","独特","洞察"],
         quote: "“我是星星的切片。”",
         desc: "你有锋利的边，也有柔软的心。你看穿很多虚假，又不愿轻易说破，只是悄悄保持距离。",
         matchName: "车厘子人格",
@@ -374,7 +386,7 @@ function renderStart() {
         </section>
 
         <section class="mb-6 text-[11px] opacity-65 leading-relaxed">
-            花 1 分钟答 6 题，看看你是哪个水果人格，
+            花 1 分钟答 6 题，看看你是哪个水果人格，<br/>
             以及命中注定的那颗「绝配果」是谁。
         </section>
 
@@ -425,8 +437,8 @@ function renderQuiz() {
                 <div class="space-y-4">
                     ${q.options.map((opt,i)=>`
                         <button onclick="handleAnswer(${i})"
-                            class="w-full text-left p-5 rounded-2xl bg黑/45 border border-white/15
-                                   backdrop-blur-md hover:bg-white/10 hover:border-orange-400/60
+                            class="w-full text-left p-5 rounded-2xl bg-black/45 border border-white/15
+                                   backdrop-blur-md hover:bg白/10 hover:border-orange-400/60
                                    transition-all active:scale-[0.97]">
                             <span class="text-base opacity-90">${opt.text}</span>
                         </button>
@@ -480,7 +492,7 @@ function renderResult() {
             <!-- 主人格油画大圆 -->
             <div class="w-64 h-64 rounded-full border-2 border-white/25 p-2 mb-6 mt-2 relative">
                 <div class="w-full h-full rounded-full overflow-hidden shadow-[0_0_36px_rgba(255,255,250,0.32)]
-                            bg-black flex items-center justify-center">
+                            bg黑 flex items-center justify-center">
                     <img src="${res.img}" class="w-full h-full object-cover" alt="${res.name}">
                     <div class="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/25"></div>
                 </div>
@@ -547,12 +559,12 @@ function renderResult() {
                     </div>
                 </div>
                 <div class="flex justify-center">
-                    <!-- ⚠️ 把 fruit-qr.jpg 换成你的真实二维码文件名 -->
+                    <!-- 把 fruit-qr.jpg 换成你的二维码文件名 -->
                     <img src="fruit-qr.jpg"
                          alt="水果宇宙群二维码"
                          class="w-40 h-40 rounded-xl border border-white/40 bg-white object-contain">
                 </div>
-                <div class="mt-3 text-[11px] opacity-60 text-center leading-relaxed">
+                <div class="mt-3 text-[11px] opacity-60 text-center">
                     在微信中可以长按二维码图片识别加入；<br/>
                     也可以长按全屏截图，发到朋友圈 / 群聊分享你的水果人格。
                 </div>
@@ -594,11 +606,9 @@ function calculateResult() {
         });
     });
 
-    const values = Object.values(scores);
-    const max = values.length ? Math.max(...values) : 0;
-    const winners = Object.keys(scores).filter(f=>scores[f]===max);
-    const winnerKey = winners.length ? winners[Math.floor(Math.random()*winners.length)] : 'peach';
-    currentState.finalResult = results[winnerKey];
+    let max = Math.max(...Object.values(scores));
+    let winners = Object.keys(scores).filter(f=>scores[f]===max);
+    currentState.finalResult = results[winners[Math.floor(Math.random()*winners.length)]];
 }
 
 /* 微信环境检测：只做提示，解决不了 github.io 被墙的问题 */
