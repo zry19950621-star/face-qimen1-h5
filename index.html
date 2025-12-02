@@ -39,7 +39,7 @@ img {
 }
 
 /* ---------------------------
-   动画（原有）
+   动画
 ---------------------------- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -125,13 +125,13 @@ img {
 <div class="absolute inset-0 z-0 pointer-events-none">
     <div class="w-full h-full relative overflow-hidden">
 
-        <!-- ⚠️ 这里换成你的新调色背景图文件名 -->
+        <!-- ⚠️ 背景图：家.jpg -->
         <img src="家.jpg"
              alt=""
              class="w-full h-full object-cover opacity-80 bg-hero-animate"
              style="filter: saturate(1.1) contrast(1.05);">
 
-        <!-- 原有的黑色渐变 -->
+        <!-- 黑色渐变 -->
         <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/55 to-black/90"></div>
 
         <!-- ✨ 星空闪烁层 -->
@@ -151,7 +151,7 @@ img {
 
 <script>
 /* ---------------------------
-    题目（不动）
+    题目
 ---------------------------- */
 const questions = [
     {
@@ -212,59 +212,59 @@ const results = {
         title:"被看见的艺术家",
         keywords:["柔软","外向","微孤独"],
         quote:"“我准备好了被看见。”",
-        desc:"甜美又有点危险…",
+        desc:"甜美又有点危险，社交高手、灵魂孤独。你读懂别人，也偶尔读不懂自己，在被围观和被理解之间来回摇摆。",
         matchName:"柠檬人格",
-        matchDesc:"他是酸的解药，你是甜的引线。"
+        matchDesc:"他是酸的解药，你是甜的引线。你负责点燃，TA负责让一切回到现实。"
     },
     lemon: { img: "柠檬.jpg", name: "柠檬人格", icon: "🍋",
         title:"酸涩的殉道者",
         keywords:["清醒","疗愈","微光"],
         quote:"“黑夜越深，酸楚越亮。”",
-        desc:"你是刀锋下的温柔治愈者…",
+        desc:"你是刀锋下的温柔治愈者。看得很清楚，也感受得很深。你懂所有人的难，却很少承认自己的累。",
         matchName:"桃子人格",
-        matchDesc:"一个敢爱，一个敢救。"
+        matchDesc:"一个敢爱，一个敢救。你帮桃子看清现实，桃子让你相信浪漫。"
     },
     cherry: { img: "樱桃.jpg", name: "车厘子人格", icon:"🍒",
         title:"精致的幻梦娃娃",
         keywords:["完美主义","被凝视","身份焦虑"],
         quote:"“我闪耀，也易碎。”",
-        desc:"你带着镜头感…",
+        desc:"你天生带着镜头感，走到哪里都是焦点。但越被看见，就越怕暴露脆弱。你在闪耀与自我怀疑中反复切换。",
         matchName:"杨桃人格",
-        matchDesc:"棱角与光环的拥抱。"
+        matchDesc:"棱角与光环的拥抱。你们一个负责发光，一个负责说真话。"
     },
 
     pineapple: { img:"菠萝.jpg", name:"菠萝人格", icon:"🍍",
         title:"刀锋上的温柔贵族",
         keywords:["野心","自律","隐忍"],
         quote:"“我笑着被切开，因为我有金色的心。”",
-        desc:"你强大、清醒…",
+        desc:"你强大、清醒、目标明确。别人看到的是你的刺，却忽略你内里的香和甜。",
         matchName:"西瓜人格",
-        matchDesc:"刀与果肉，互为柔软。"
+        matchDesc:"刀与果肉，互为柔软。TA让你卸下盔甲，你让TA看见边界。"
     },
 
     kiwi:{ img:"kiwi.jpg", name:"奇异果人格", icon:"🥝",
         title:"孤岛天才",
         keywords:["独立","内敛","灵感"],
         quote:"“怪，也是一种天赋。”",
-        desc:"你是艺术怪胎…",
+        desc:"你是有点毛躁、又很通透的艺术怪胎。世界不一定懂你，但灵感永远站在你这边。",
         matchName:"火龙果人格",
-        matchDesc:"理性与艳丽的和弦。"
+        matchDesc:"理性与艳丽的和弦。你们会一起造一座只属于彼此的平行宇宙。"
     },
 
     guava:{ img:"番石榴.jpg", name:"芭乐人格", icon:"🥭",
         title:"野蛮女王",
         keywords:["热烈","草根","反叛"],
         quote:"“我不完美，但我真实。”",
-        desc:"你从不伪装…",
+        desc:"你从不伪装，情绪来就来，走就走。你是人群里最吵闹的一颗心，也是最真诚的一颗心。",
         matchName:"石榴人格",
-        matchDesc:"野与柔的平衡。"
+        matchDesc:"野与柔的平衡。你帮TA撕开规训，TA教你如何心疼自己。"
     },
 
     pomegranate:{ img:"石榴.jpg", name:"石榴人格", icon:"🍅",
         title:"被赞美的牺牲者",
         keywords:["母性","承受","重生"],
         quote:"“我爱所有人，也想被自己爱。”",
-        desc:"你总是先照顾别人…",
+        desc:"你总是先照顾别人，再想起自己。你擅长付出，也在学着拒绝。你的温柔不是天生的讨好，而是被磨出来的力量。",
         matchName:"芭乐人格",
         matchDesc:"一个教对方活，一个教对方爱。"
     },
@@ -273,45 +273,45 @@ const results = {
         title:"甜的奉献者",
         keywords:["温顺","隐忍","苏醒"],
         quote:"“这次，我为自己甜。”",
-        desc:"你习惯把好东西留给别人…",
+        desc:"你习惯把好东西留给别人，把压力留给自己。直到有一天，你终于意识到：你的甜，也可以只为自己保留。",
         matchName:"菠萝人格",
-        matchDesc:"甜遇上刺，才完整。"
+        matchDesc:"甜遇上刺，才成就完整的味道。"
     },
 
     watermelon:{ img:"西瓜.jpg", name:"西瓜人格", icon:"🍉",
         title:"宇宙浪漫家",
         keywords:["流动","欢乐","宽容"],
         quote:"“我不怕虚无，因为我自带引力。”",
-        desc:"你自由、松弛…",
+        desc:"你自由、松弛、对世界保持好奇心。你不强求别人留下，但愿意为喜欢的人一直亮着。",
         matchName:"菠萝人格",
-        matchDesc:"阳光撞上金色。"
+        matchDesc:"阳光撞上金色。你让TA软一点，TA让你稳一点。"
     },
 
     dragonfruit:{ img:"火龙果.jpg", name:"火龙果人格", icon:"🐉",
         title:"艳丽的幸存者",
         keywords:["艺术","情绪","真心"],
         quote:"“我亮过，也痛过。”",
-        desc:"你像一场永不重演的现场…",
+        desc:"你像一场永远不会重演的现场演出。外表鲜艳、语气轻松，心里却藏着很多没人知道的黑洞。",
         matchName:"奇异果人格",
-        matchDesc:"艳丽与孤独的疗愈。"
+        matchDesc:"艳丽与孤独的疗愈。你们互相承认对方的奇怪，也互相守护对方的敏感。"
     },
 
     orange:{ img:"orange.jpg", name:"橙子人格", icon:"🍊",
         title:"元气乐天派",
         keywords:["阳光","掩饰","活力"],
         quote:"“我的快乐，是你的光。”",
-        desc:"你是所有人心里的小太阳…",
+        desc:"你是所有人心里的小太阳。你习惯用笑和段子挡住黑暗，但真正理解你的人并不多。",
         matchName:"西瓜人格",
-        matchDesc:"快乐叠加快乐。"
+        matchDesc:"快乐叠加快乐。你们会一起把日常过成夏天。"
     },
 
     starfruit:{ img:"星果.jpg", name:"杨桃人格", icon:"⭐",
         title:"孤独的理想家",
         keywords:["棱角","独特","洞察"],
         quote:"“我是星星的切片。”",
-        desc:"你有锋利的边，也有柔软的心…",
+        desc:"你有锋利的边，也有柔软的心。你看穿很多虚假，又不愿轻易说破，只是悄悄保持距离。",
         matchName:"车厘子人格",
-        matchDesc:"一个做梦，一个拆梦。"
+        matchDesc:"棱角与光环的拥抱。你们一个负责做梦，一个负责拆梦。"
     }
 };
 
@@ -328,7 +328,7 @@ let currentState = {
 const app = document.getElementById('content');
 
 /* ---------------------------
-    渲染函数（保持与你原来一致）
+    渲染函数
 ---------------------------- */
 function render() {
     app.innerHTML = '';
@@ -339,7 +339,7 @@ function render() {
 }
 
 /* ---------------------------
-    首页渲染（已适配中文文件名）
+    首页
 ---------------------------- */
 function renderStart() {
     const thumbFruits = [
@@ -359,7 +359,7 @@ function renderStart() {
             <div class="text-[10px] tracking-[0.4em] opacity-70 mb-2">
                 ROACYZHENG · FRUIT UNIVERSE
             </div>
-            <h1 class="text-3xl font-bold leading-snug">
+            <h1 class="text-3xl font-bold leading-snug drop-shadow-[0_0_14px_rgba(255,160,80,0.9)]">
                 你的<span class="text-orange-300">水果人格</span><br/>绝配是谁？
             </h1>
         </header>
@@ -367,7 +367,8 @@ function renderStart() {
         <section class="mt-4 mb-8">
             <div class="w-full rounded-3xl border border-white/15 bg-black/35 backdrop-blur-md px-4 py-4">
                 <div class="text-[11px] opacity-70 mb-3">
-                    在艺术家 <span class="font-semibold">郑冲</span> 的「水果宇宙」里，每一颗果实都是灵魂的隐喻。
+                    在艺术家 <span class="font-semibold">郑冲</span> 的「水果宇宙」里，<br/>
+                    每一颗果实，都是一个灵魂的隐喻。
                 </div>
                 <div class="flex items-center gap-3 overflow-x-auto pb-1">
                     ${thumbFruits.map(f => `
@@ -379,9 +380,15 @@ function renderStart() {
             </div>
         </section>
 
+        <section class="mb-6 text-[11px] opacity-65 leading-relaxed">
+            花 1 分钟答 6 题，<br/>
+            看看你是哪一颗果人格，<br/>
+            以及命中注定的那颗「绝配果」是谁。
+        </section>
+
         <footer class="flex flex-col items-center gap-4">
             <button onclick="startQuiz()"
-                class="w-full max-w-[260px] py-3.5 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full font-bold text-lg shadow-lg">
+                class="w-full max-w-[260px] py-3.5 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(255,165,0,0.55)]">
                 开始切开灵魂 →
             </button>
         </footer>
@@ -391,7 +398,7 @@ function renderStart() {
 }
 
 /* ---------------------------
-    答题页（不动）
+    答题页
 ---------------------------- */
 function renderQuiz() {
     const q = questions[currentState.currentQ];
@@ -402,7 +409,7 @@ function renderQuiz() {
 
             <div class="mb-4">
                 <div class="flex justify-between items-center mb-2">
-                    <div class="text-xs opacity-70">FRUIT TEST</div>
+                    <div class="text-xs opacity-70 tracking-[0.25em]">FRUIT TEST</div>
                     <div class="text-[11px] opacity-70">${currentState.currentQ + 1} / ${questions.length}</div>
                 </div>
                 <div class="h-1 bg-white/10 rounded-full overflow-hidden">
@@ -415,13 +422,16 @@ function renderQuiz() {
                 <div class="space-y-4">
                     ${q.options.map((opt,i)=>`
                         <button onclick="handleAnswer(${i})"
-                            class="w-full p-5 rounded-2xl bg-black/45 border border-white/15 backdrop-blur-md">
+                            class="w-full p-5 rounded-2xl bg-black/45 border border-white/15 backdrop-blur-md active:scale-[0.97] transition">
                             ${opt.text}
                         </button>
                     `).join('')}
                 </div>
             </div>
 
+            <div class="mt-8 text-[11px] opacity-45 text-center leading-relaxed">
+                不用反复纠结，第一反应通常就是你真实的水果内核。
+            </div>
         </div>`;
     app.innerHTML = html;
 }
@@ -433,67 +443,141 @@ function renderLoading() {
     app.innerHTML = `
         <div class="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden">
             <div class="w-48 h-48 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 blur-2xl opacity-70 animate-spin-slow"></div>
-            <div class="absolute bottom-32 text-xs opacity-80">正在切开灵魂...</div>
+            <div class="absolute bottom-32 text-xs tracking-[0.5em] font-light animate-pulse text-white/80">
+                正在切开灵魂...
+            </div>
         </div>
     `;
     setTimeout(()=>{ currentState.view='result'; render(); },2800);
 }
 
 /* ---------------------------
-    结果页（不动）
+    结果页 + 分享卡片 + 加群二维码
 ---------------------------- */
 function renderResult() {
     const res = currentState.finalResult;
-    const matchRes = Object.values(results).find(r => r.name === res.matchName);
+    const matchRes = Object.values(results).find(r => r.name === res.matchName) || results.peach;
 
     const html = `
     <div class="min-h-screen overflow-y-auto pb-32 animate-fade-in relative">
         <div class="px-6 pt-6 flex justify-between items-center opacity-80 text-[11px]">
-            <span class="tracking-[0.28em]">FRUIT UNIVERSE</span>
-            <button onclick="location.reload()" class="px-2 py-1 rounded-full bg-white/8 border">重新测试</button>
+            <span class="tracking-[0.28em]">FRUIT · UNIVERSE</span>
+            <button onclick="location.reload()" class="px-2 py-1 rounded-full bg-white/8 border border-white/16">
+                重新测试
+            </button>
         </div>
 
         <div class="px-6 flex flex-col items-center mt-3">
 
+            <!-- 主人格大圆 -->
             <div class="w-64 h-64 rounded-full border-2 border-white/25 p-2 mb-6 relative">
-                <div class="w-full h-full rounded-full overflow-hidden">
-                    <img src="${res.img}" class="w-full h-full object-cover">
+                <div class="w-full h-full rounded-full overflow-hidden shadow-[0_0_36px_rgba(255,255,250,0.32)] bg-black">
+                    <img src="${res.img}" class="w-full h-full object-cover" alt="${res.name}">
                 </div>
-                <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 text-[11px] px-3 py-1 rounded-full bg-black/70 border">
+                <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 text-[11px] px-3 py-1 rounded-full
+                            bg-black/70 border border-white/30 shadow-md">
                     ${res.icon} ${res.name}
                 </div>
             </div>
 
-            <h1 class="text-3xl serif font-bold mb-2 text-center">${res.title}</h1>
+            <div class="mt-6 text-center mb-2 text-xs tracking-[0.35em] opacity-60 uppercase">
+                YOUR FRUIT PERSONA
+            </div>
+            <h1 class="text-3xl serif font-bold mb-2 text-center">
+                ${res.title}
+            </h1>
 
             <div class="flex flex-wrap justify-center gap-2 mb-8">
-                ${res.keywords.map(k=>`<span class="text-xs px-3 py-1 rounded-full border bg-white/6">${k}</span>`).join('')}
+                ${res.keywords.map(k =>
+                    `<span class="text-xs px-3 py-1 rounded-full border border-white/20 bg-white/6 text-orange-100">
+                        ${k}
+                    </span>`
+                ).join('')}
             </div>
 
-            <div class="text-lg serif italic opacity-90 text-center mb-8 max-w-xs">${res.quote}</div>
-
-            <div class="w-full bg-black/55 backdrop-blur-xl rounded-2xl p-6 border mb-10">
-                <h3 class="text-[11px] opacity-60 mb-2">人格切片 · Analysis</h3>
-                <p class="text-sm leading-7">${res.desc}</p>
+            <div class="text-lg serif italic opacity-90 text-center mb-8 leading-relaxed max-w-xs">
+                ${res.quote}
             </div>
 
-            <!-- 绝配区 -->
-            <div class="w-full bg-gradient-to-r from-indigo-900/70 to-purple-900/70 rounded-2xl p-6 border">
-                <div class="flex gap-4 items-center">
-                    <div class="w-16 h-16 rounded-full overflow-hidden">
-                        <img src="${matchRes.img}" class="w-full h-full object-cover">
+            <div class="w-full bg-black/55 backdrop-blur-xl rounded-2xl p-6 border border-white/14 mb-10">
+                <h3 class="text-[11px] opacity-60 uppercase tracking-wider mb-2">
+                    人格切片 · Analysis
+                </h3>
+                <p class="text-sm leading-7 text-gray-100 text-justify">
+                    ${res.desc}
+                </p>
+            </div>
+
+            <!-- 绝配人格区 -->
+            <div class="w-full bg-gradient-to-r from-indigo-900/70 to-purple-900/70
+                        rounded-2xl p-6 border border-white/16 mb-10 relative overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-40 h-40 rounded-full bg-white/10 blur-3xl"></div>
+
+                <div class="relative z-10 flex gap-4 items-center">
+                    <div class="w-16 h-16 rounded-full border border-white/30 overflow-hidden shadow-lg flex-shrink-0">
+                        <img src="${matchRes.img}" class="w-full h-full object-cover" alt="${res.matchName}">
                     </div>
                     <div class="flex-1">
-                        <div class="text-[11px] opacity-60">Soulmate Fruit</div>
-                        <div class="font-semibold mb-2">${res.matchName}</div>
-                        <p class="text-xs italic border-l-2 pl-3">${res.matchDesc}</p>
+                        <div class="text-[11px] uppercase opacity-60 tracking-[0.2em] mb-1">
+                            Soulmate Fruit
+                        </div>
+                        <div class="font-semibold mb-2">
+                            ${res.matchName}
+                        </div>
+                        <p class="text-xs opacity-90 leading-relaxed italic border-l-2 border-white/40 pl-3">
+                            ${res.matchDesc}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full text-center text-[11px] opacity-55 pb-6">
-                长按截图保存你的水果人格<br/>
-                欢迎分享到社交平台 TAG @ROACYZHENG
+            <!-- 📸 分享卡片区域：方便截图 / 长按分享 -->
+            <div id="share-card"
+                 class="w-full rounded-3xl border border-dashed border-white/25 bg-black/55 backdrop-blur-xl px-5 py-5 mb-8">
+                <div class="text-[11px] tracking-[0.3em] text-center uppercase opacity-65 mb-3">
+                    SHARE · CARD
+                </div>
+                <div class="flex gap-3 items-center mb-4">
+                    <div class="w-14 h-14 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
+                        <img src="${res.img}" class="w-full h-full object-cover" alt="">
+                    </div>
+                    <div class="flex-1 text-xs leading-relaxed">
+                        <div class="font-semibold mb-1">${res.name} · ${res.title}</div>
+                        <div class="opacity-80">「你的水果人格绝配是谁？」测试来自 ROACYZHENG 的水果宇宙。</div>
+                    </div>
+                </div>
+                <div class="text-[11px] text-center opacity-80 leading-relaxed">
+                    在微信中：可以<strong>直接截图这一页</strong>，<br/>
+                    或长按页面选择【发送给朋友】/【分享到朋友圈】（部分机型）。<br/>
+                    和朋友一起测测你们是不是命中绝配果 🍑
+                </div>
+            </div>
+
+            <!-- 🍉 加入水果宇宙群 · 二维码 -->
+            <div class="w-full bg-black/65 backdrop-blur-xl rounded-2xl p-6 border border-white/18 mb-6">
+                <h3 class="text-sm font-semibold mb-2 text-center">
+                    加入「水果宇宙」小群 🌌
+                </h3>
+                <p class="text-[11px] opacity-80 text-center mb-4 leading-relaxed">
+                    想一起聊人格、聊艺术比基尼、抢第一批周边？<br/>
+                    扫描下方二维码，加入「水果宇宙」小宇宙。
+                </p>
+                <div class="flex flex-col items-center gap-3">
+                    <!-- ⚠️ 把 qr-fruit-universe.jpg 换成你自己的二维码文件名 -->
+                    <div class="w-40 h-40 bg-white rounded-2xl overflow-hidden">
+                        <img src="qr-fruit-universe.jpg" class="w-full h-full object-contain" alt="水果宇宙群二维码">
+                    </div>
+                    <div class="text-[11px] opacity-70 text-center leading-relaxed">
+                        在微信里<strong>长按识别二维码</strong>加入；<br/>
+                        或者先截图保存，再从相册中识别二维码。
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full text-center text-[11px] opacity-55 pb-6 leading-relaxed">
+                · 长按或截图这一页，保存你的水果人格 ·<br/>
+                欢迎分享到社交平台，tag <span class="font-semibold">@ROACYZHENG</span><br/>
+                看看你身边的朋友都是什么果。
             </div>
 
         </div>
@@ -543,7 +627,7 @@ function calculateResult() {
         document.getElementById('wx-tip').classList.remove('hidden');
     }
 })();
- 
+
 render();
 </script>
 
