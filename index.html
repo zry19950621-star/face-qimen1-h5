@@ -74,6 +74,66 @@
 
         .safe-top    { padding-top: env(safe-area-inset-top); }
         .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+        /* === 开屏背景动态效果 === */
+
+        /* 背景图：轻微呼吸缩放 + 上下漂浮 */
+        @keyframes bgHeroFloat {
+            0% {
+                transform: scale(1) translateY(0);
+            }
+            50% {
+                transform: scale(1.06) translateY(-8px);
+            }
+            100% {
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .bg-hero-animate {
+            animation: bgHeroFloat 14s ease-in-out infinite;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        /* 星光闪烁层 */
+        .star-twinkle-layer {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255,255,255,0.70) 0, rgba(255,255,255,0) 45%),
+                radial-gradient(circle at 80% 30%, rgba(255,230,180,0.8) 0, rgba(255,230,180,0) 50%),
+                radial-gradient(circle at 20% 80%, rgba(150,200,255,0.7) 0, rgba(150,200,255,0) 55%);
+            mix-blend-mode: screen;
+            opacity: 0.28;
+            animation: starTwinkle 6s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        /* 星光明暗变化 */
+        @keyframes starTwinkle {
+            0% {
+                opacity: 0.1;
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            50% {
+                opacity: 0.35;
+                transform: translate3d(3px, -4px, 0) scale(1.03);
+            }
+            100% {
+                opacity: 0.18;
+                transform: translate3d(-2px, 3px, 0) scale(1.01);
+            }
+        }
+
+        /* iOS “减少动态”兼容 */
+        @media (prefers-reduced-motion: reduce) {
+            .bg-hero-animate,
+            .star-twinkle-layer {
+                animation: none !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 <body class="flex justify-center min-h-screen">
@@ -82,30 +142,18 @@
 <div id="app"
      class="w-full max-w-[450px] bg-black relative shadow-2xl min-h-screen flex flex-col">
 
-    <!-- 背景：用 home.jpg 叠加渐变与星点 -->
+    <!-- 背景：改为用 opening-bg.jpg + 动态效果 -->
     <div class="absolute inset-0 z-0 pointer-events-none">
-        <div class="w-full h-full relative">
-            <img src="home.jpg"
+        <div class="w-full h-full relative overflow-hidden">
+            <!-- 背景图：缓慢缩放+漂浮 -->
+            <img src="opening-bg.jpg"
                  alt=""
-                 class="w-full h-full object-cover opacity-70"
-                 style="filter: saturate(1.15) contrast(1.05);">
+                 class="w-full h-full object-cover opacity-80 bg-hero-animate"
+                 style="filter: saturate(1.1) contrast(1.05);">
+            <!-- 渐变叠加，保持文字可读性 -->
             <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/55 to-black/90"></div>
-            <!-- 一点星星噪点 -->
-            <div class="absolute inset-0 mix-blend-screen opacity-25">
-                <svg viewBox="0 0 200 200" class="w-full h-full">
-                    <defs>
-                        <radialGradient id="g" cx="50%" cy="50%" r="70%">
-                            <stop offset="0%" stop-color="#fff"/>
-                            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-                        </radialGradient>
-                    </defs>
-                    <circle cx="30" cy="40" r="1" fill="url(#g)"/>
-                    <circle cx="120" cy="80" r="1.5" fill="url(#g)"/>
-                    <circle cx="180" cy="30" r="1.2" fill="url(#g)"/>
-                    <circle cx="60" cy="150" r="1.4" fill="url(#g)"/>
-                    <circle cx="170" cy="140" r="1.3" fill="url(#g)"/>
-                </svg>
-            </div>
+            <!-- 星光闪烁层 -->
+            <div class="absolute inset-0 pointer-events-none star-twinkle-layer"></div>
         </div>
     </div>
 
@@ -205,7 +253,7 @@
             name: "车厘子人格",
             icon: "🍒",
             color: "from-fuchsia-300 via-rose-400 to-purple-400",
-            title: "精致的幻梦娃娃",
+            title: "精致的幻梦者",
             keywords: ["完美主义", "被凝视", "身份焦虑"],
             quote: "“我闪耀，也易碎。”",
             desc: "你天生带着镜头感，走到哪里都是焦点。但越被看见，就越怕暴露脆弱。你在闪耀与自我怀疑中反复切换。",
@@ -377,7 +425,7 @@
                             ${
                                 thumbFruits.map(f => `
                                     <div class="flex-shrink-0 w-12 h-12 rounded-full border border-white/40 overflow-hidden shadow-md">
-                                        <img src="${f.img}" class="w-full h-full object-cover" alt="" />
+                                        <img src="${f.img}" loading="lazy" class="w-full h-full object-cover" alt="" />
                                     </div>
                                 `).join('')
                             }
@@ -440,7 +488,7 @@
                         .map(key => `
                             <div class="flex-shrink-0 w-9 h-9 rounded-full overflow-hidden border border-white/30
                                         ${key === 'peach' ? 'shadow-[0_0_12px_rgba(255,160,80,0.9)]' : ''}">
-                                <img src="${results[key].img}" class="w-full h-full object-cover" alt="" />
+                                <img src="${results[key].img}" loading="lazy" class="w-full h-full object-cover" alt="" />
                             </div>
                         `).join('')
                     }
@@ -547,6 +595,7 @@
                         <div class="w-full h-full rounded-full overflow-hidden shadow-[0_0_36px_rgba(255,255,250,0.32)]
                                     relative bg-black flex items-center justify-center">
                             <img src="${res.img}"
+                                 loading="lazy"
                                  class="w-full h-full object-cover"
                                  alt="${res.name}">
                             <div class="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/25"></div>
@@ -593,7 +642,7 @@
 
                         <div class="relative z-10 flex gap-4 items-center">
                             <div class="w-16 h-16 rounded-full border border-white/30 overflow-hidden shadow-lg flex-shrink-0">
-                                <img src="${matchRes.img}" class="w-full h-full object-cover" alt="${res.matchName}">
+                                <img src="${matchRes.img}" loading="lazy" class="w-full h-full object-cover" alt="${res.matchName}">
                             </div>
                             <div class="flex-1">
                                 <div class="text-[11px] uppercase opacity-60 tracking-[0.2em] mb-1">
